@@ -117,12 +117,12 @@ footer{border-top:1px solid var(--line);padding-top:14px;font-size:.8rem;color:v
 </style>
 </head>
 <body>
-<div class="demo-bar" role="note"><b>가상 데이터 데모</b> · 화면의 조회수·스크롤·클릭 숫자는 모두 생성된 가짜 데이터예요. 실제 회사·상세페이지 데이터가 아니에요. <a href="../">← 데모 목록</a></div>
+<div class="demo-bar" role="note"><b>가상 데이터 데모</b> · 화면의 조회수·스크롤·클릭 숫자는 모두 생성한 가짜 데이터로, 실제 회사·상세페이지 데이터가 아니다. <a href="../">← 데모 목록</a></div>
 <div class="wrap">
   <header class="mast">
     <div class="kicker">DETAIL PAGE ANALYZER · DEMO</div>
-    <h1>상세페이지 분석기</h1>
-    <p>유료 히트맵 도구(뷰저블)의 트래킹이 멈춘 동안, GA4 원천 이벤트로 상세페이지의 스크롤 도달률과 클릭을 대신 보기 위해 만든 도구예요. 과정과 기간, 유입경로를 고르면 바로 계산하고, 두 조건을 나란히 비교할 수 있어요.</p>
+    <h1>상세페이지 스크롤·클릭 분석</h1>
+    <p>유료 히트맵 도구(뷰저블)의 트래킹이 멈춘 뒤, BigQuery에 적재된 GA4 이벤트로 상세페이지 스크롤 도달률과 클릭을 보기 위해 만든 도구다. 과정·기간·유입경로를 고르면 바로 계산되고, 두 조건을 나란히 비교할 수 있다.</p>
   </header>
 
   <section class="conds" aria-label="조회 조건">
@@ -144,7 +144,7 @@ footer{border-top:1px solid var(--line);padding-top:14px;font-size:.8rem;color:v
       <h2>스크롤 도달률</h2>
       <div class="fun" id="fun"></div>
       <div class="legend" id="fun-leg"></div>
-      <p class="note" style="margin-top:12px">페이지를 연 사람 중 해당 깊이까지 내려간 사람의 비율이에요. 옆 숫자는 직전 구간 대비 이탈(%p)이에요.</p>
+      <p class="note" style="margin-top:12px">페이지를 연 사람 중 해당 깊이까지 내려간 사람의 비율이다. 옆 숫자는 직전 구간 대비 이탈(%p)이다.</p>
     </div>
     <div class="wf-wrap"><div class="wf" id="wf-s"></div><p class="wf-cap">가상 상세페이지 와이어프레임 · 진할수록 많이 도달 <span id="wf-s-lab"></span></p></div>
   </section>
@@ -154,7 +154,7 @@ footer{border-top:1px solid var(--line);padding-top:14px;font-size:.8rem;color:v
       <h2>클릭 랭킹</h2>
       <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px">
         <label class="field">표시 개수 <select id="topn"><option>10</option><option>15</option><option selected>20</option></select></label>
-        <span class="note">클릭 제외 문구 (누르면 포함/제외가 바뀌어요)</span>
+        <span class="note">클릭 제외 문구 (누르면 포함/제외가 바뀐다)</span>
       </div>
       <div class="chips" id="exc"></div>
       <div id="clk"></div>
@@ -165,14 +165,14 @@ footer{border-top:1px solid var(--line);padding-top:14px;font-size:.8rem;color:v
   <section data-tab="method" hidden>
     <div class="card method">
       <h2>산정 기준</h2>
-      <div><h3>스크롤</h3><p>GA4 스크롤 이벤트의 깊이 값을 씁니다. 실제 사이트에서는 직접 심은 커스텀 깊이(20/50/70/90%)와 GA4 자동 수집(90% 고정)이 <b>서로 배타적으로</b> 기록돼서, 한쪽만 보면 90% 도달자가 빠졌어요. 그래서 두 값을 하나로 합쳐(COALESCE) 계산합니다.</p></div>
+      <div><h3>스크롤</h3><p>GA4 스크롤 이벤트의 깊이 값을 쓴다. 실제 사이트에서는 직접 심은 커스텀 깊이(20/50/70/90%)와 GA4 자동 수집(90% 고정)이 <b>서로 배타적으로</b> 기록되어, 한쪽만 보면 90% 도달자가 빠졌다. 그래서 두 값을 하나로 합쳐(COALESCE) 계산한다.</p></div>
       <div><h3>클릭</h3><ul>
-        <li>클릭 이벤트의 텍스트 값을 공백 정리(TRIM) 후 같은 문구로 묶습니다.</li>
-        <li><b>같은 사용자 + 같은 시각(timestamp)</b>의 클릭은 1번으로 셉니다. 실측에서 트래킹 스크립트가 한 번의 클릭을 여러 번 기록하는 문제를 발견했고, 원시 이벤트의 상당 부분이 이런 중복이었어요. 데모의 '원시 이벤트 → 중복 제거' 숫자가 이 과정을 보여줘요.</li>
-        <li>GNB·푸터처럼 모든 페이지에 있는 요소는 상세페이지 내용과 무관해서 랭킹에서 뺍니다. 제외 목록은 담당자가 화면에서 직접 관리해요.</li>
+        <li>클릭 이벤트의 텍스트 값을 공백 정리(TRIM) 후 같은 문구로 묶는다.</li>
+        <li><b>같은 사용자 + 같은 시각(timestamp)</b>의 클릭은 1회로 센다. 실측 과정에서 트래킹 스크립트가 한 번의 클릭을 여러 번 기록하는 문제를 발견했고, 원시 이벤트의 상당 부분이 이런 중복이었다. 데모의 '원시 이벤트 → 중복 제거' 숫자가 이 과정을 보여 준다.</li>
+        <li>GNB·푸터처럼 모든 페이지에 있는 요소는 상세페이지 내용과 무관해 랭킹에서 뺀다. 제외 목록은 담당자가 화면에서 직접 관리한다.</li>
       </ul></div>
-      <div><h3>기준을 맞추는 대신 기준을 밝힘</h3><p>유료 도구와 숫자를 똑같이 맞추는 건 집계 방식이 달라 불가능했어요. 그래서 산정 기준을 화면에 명시하고, <b>같은 기준 안에서 추세와 상대 비교</b>(기수 간, 유입경로 간)에 쓰는 것으로 팀과 합의했어요.</p></div>
-      <div><h3>이 데모에 대해</h3><p>실제 도구는 GA4 BigQuery 원천 데이터에 연결된 Streamlit 앱이에요. 이 페이지는 같은 화면 구성을 정적 HTML로 옮기고, 데이터는 <b>가상 데이터 마트</b>(실제 마케팅 시트와 같은 구조의 가짜 데이터)의 일자별 조회수와 유입 캠페인을 바탕으로 생성했어요. 과정명은 일반 명칭으로 바꿨어요.</p></div>
+      <div><h3>기준 일치 대신 기준 명시</h3><p>유료 도구와는 집계 방식이 달라 숫자를 똑같이 맞출 수 없었다. 그래서 산정 기준을 화면에 적어 두고, <b>같은 기준 안에서 추세와 상대 비교</b>(기수 간, 유입경로 간)를 보는 용도로 쓰기로 팀과 합의했다.</p></div>
+      <div><h3>이 데모에 대해</h3><p>실제 도구는 GA4 BigQuery 원천 데이터에 연결된 Streamlit 앱이다. 이 페이지는 같은 화면 구성을 정적 HTML로 옮긴 것이고, 데이터는 <b>가상 데이터 마트</b>(실제 마케팅 시트와 같은 구조의 가짜 데이터)의 일자별 조회수와 유입 캠페인을 바탕으로 생성했다. 과정명은 일반 명칭으로 바꿨다.</p></div>
     </div>
   </section>
 
