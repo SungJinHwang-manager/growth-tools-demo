@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>상세페이지 분석기 데모</title>
-<meta name="description" content="GA4 스크롤·클릭 이벤트로 부트캠프 상세페이지를 분석하는 도구의 데모. 모든 데이터는 가상입니다.">
+<meta name="description" content="상세페이지 스크롤·클릭 분석 도구 데모. 모든 데이터는 가상 데이터다.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
-/* Layout: sticky demo notice → masthead → condition bar (A, optional B) → KPI row → tabs (스크롤 / 클릭 / 산정 기준) with page wireframe beside the chart */
+/* Layout: sticky demo notice → masthead → condition bar (A, optional B) → KPI row → tabs (스크롤 / 클릭) with page wireframe beside the chart */
 :root{
   --bg:#f7f6f4; --paper:#ffffff; --ink:#161412; --ink-2:#4d4844; --muted:#6e6762; --line:#e6e2de;
   --accent:#ff6000; --accent-soft:#fff0e6; --b:#2f6fd6; --b-soft:#e7effc; --warn:#a14a00;
@@ -106,10 +106,6 @@ td.r{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media (max-width:760px){.two{grid-template-columns:1fr}}
-.method{display:grid;gap:14px;max-width:78ch}
-.method h3{font-size:.98rem;margin:0}
-.method p,.method li{margin:0;color:var(--ink-2);font-size:.9rem}
-.method ul{margin:4px 0 0;padding-left:1.1em;display:grid;gap:4px}
 .tip{position:fixed;z-index:40;pointer-events:none;background:var(--ink);color:var(--paper);font-size:.76rem;padding:4px 8px;border-radius:4px;opacity:0;transition:opacity .1s;max-width:260px}
 footer{border-top:1px solid var(--line);padding-top:14px;font-size:.8rem;color:var(--muted)}
 @media (max-width:860px){.wf-wrap{position:static}.wf{width:100%;max-width:300px;margin:0 auto}}
@@ -122,7 +118,7 @@ footer{border-top:1px solid var(--line);padding-top:14px;font-size:.8rem;color:v
   <header class="mast">
     <div class="kicker">DETAIL PAGE ANALYZER · DEMO</div>
     <h1>상세페이지 스크롤·클릭 분석</h1>
-    <p>유료 히트맵 도구(뷰저블)의 트래킹이 멈춘 뒤, BigQuery에 적재된 GA4 이벤트로 상세페이지 스크롤 도달률과 클릭을 보기 위해 만든 도구다. 과정·기간·유입경로를 고르면 바로 계산되고, 두 조건을 나란히 비교할 수 있다.</p>
+    <p>방문자가 상세페이지를 어디까지 보고 무엇을 누르는지 확인하기 위해 만든 도구다. 과정·기간·유입경로를 고르면 바로 계산되고, 두 조건을 나란히 비교할 수 있다.</p>
   </header>
 
   <section class="conds" aria-label="조회 조건">
@@ -136,7 +132,6 @@ footer{border-top:1px solid var(--line);padding-top:14px;font-size:.8rem;color:v
   <nav class="tabs" role="tablist" aria-label="보기">
     <button type="button" role="tab" data-t="scroll" aria-selected="true">스크롤</button>
     <button type="button" role="tab" data-t="click" aria-selected="false">클릭</button>
-    <button type="button" role="tab" data-t="method" aria-selected="false">산정 기준</button>
   </nav>
 
   <section data-tab="scroll" class="panel">
@@ -162,21 +157,8 @@ footer{border-top:1px solid var(--line);padding-top:14px;font-size:.8rem;color:v
     <div class="wf-wrap"><div class="wf" id="wf-c"></div><p class="wf-cap">점 크기 = 클릭 수 (조건 A) · 회색 점 = 제외된 요소</p></div>
   </section>
 
-  <section data-tab="method" hidden>
-    <div class="card method">
-      <h2>산정 기준</h2>
-      <div><h3>스크롤</h3><p>GA4 스크롤 이벤트의 깊이 값을 쓴다. 실제 사이트에서는 직접 심은 커스텀 깊이(20/50/70/90%)와 GA4 자동 수집(90% 고정)이 <b>서로 배타적으로</b> 기록되어, 한쪽만 보면 90% 도달자가 빠졌다. 그래서 두 값을 하나로 합쳐(COALESCE) 계산한다.</p></div>
-      <div><h3>클릭</h3><ul>
-        <li>클릭 이벤트의 텍스트 값을 공백 정리(TRIM) 후 같은 문구로 묶는다.</li>
-        <li><b>같은 사용자 + 같은 시각(timestamp)</b>의 클릭은 1회로 센다. 실측 과정에서 트래킹 스크립트가 한 번의 클릭을 여러 번 기록하는 문제를 발견했고, 원시 이벤트의 상당 부분이 이런 중복이었다. 데모의 '원시 이벤트 → 중복 제거' 숫자가 이 과정을 보여 준다.</li>
-        <li>GNB·푸터처럼 모든 페이지에 있는 요소는 상세페이지 내용과 무관해 랭킹에서 뺀다. 제외 목록은 담당자가 화면에서 직접 관리한다.</li>
-      </ul></div>
-      <div><h3>기준 일치 대신 기준 명시</h3><p>유료 도구와는 집계 방식이 달라 숫자를 똑같이 맞출 수 없었다. 그래서 산정 기준을 화면에 적어 두고, <b>같은 기준 안에서 추세와 상대 비교</b>(기수 간, 유입경로 간)를 보는 용도로 쓰기로 팀과 합의했다.</p></div>
-      <div><h3>이 데모에 대해</h3><p>실제 도구는 GA4 BigQuery 원천 데이터에 연결된 Streamlit 앱이다. 이 페이지는 같은 화면 구성을 정적 HTML로 옮긴 것이고, 데이터는 <b>가상 데이터 마트</b>(실제 마케팅 시트와 같은 구조의 가짜 데이터)의 일자별 조회수와 유입 캠페인을 바탕으로 생성했다. 과정명은 일반 명칭으로 바꿨다.</p></div>
-    </div>
-  </section>
 
-  <footer>가상 데이터 데모 · 설계·제작 황성진 · 실제 서비스에서는 GA4 BigQuery + Streamlit으로 동작</footer>
+  <footer>가상 데이터 데모 · 설계·제작 황성진</footer>
 </div>
 <div class="tip" id="tip"></div>
 
